@@ -3,7 +3,7 @@ on: push
 
 jobs:
   config:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-22.04
     services:
       pypi_wayback:
         image: ghcr.io/waleko/pypi-wayback
@@ -23,7 +23,7 @@ jobs:
         } >> $GITHUB_OUTPUT
   ci:
     needs: config
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-22.04
     services:
       pypi_wayback:
         image: ghcr.io/waleko/pypi-wayback
@@ -39,21 +39,20 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Setup python
-      uses: actions/setup-python@v5
+      uses: actions/setup-python@v4
       with:
         python-version: ${{ matrix.python-version }}
         architecture: x64
-        allow-build: true
     - name: Install dependencies
       run: |
-        PIP_INDEX_URL=https://pypi.org/simple python -m pip install --upgrade pip
+        python -m pip install --upgrade pip
         pip install -r requirements.txt
         pip install virtualenv
     - name: CI Build
       run: |
         ./script/cibuild
     - name: Store Code Coverage Data
-        # if the previous step(s) failed try anyways
+      # if the previous step(s) failed try anyways
       if: always()
       uses: actions/upload-artifact@v4
       with:
@@ -64,7 +63,7 @@ jobs:
           htmlcov
   setup-py:
     needs: config
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-22.04
     services:
       pypi_wayback:
         image: ghcr.io/waleko/pypi-wayback
@@ -73,13 +72,12 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Setup python
-      uses: actions/setup-python@v5
+      uses: actions/setup-python@v4
       with:
           # Most recent release from https://devguide.python.org/versions/#versions
         python-version: ${{ 
           fromJson(needs.config.outputs.json).python_version_current }}
         architecture: x64
-        allow-build: true
     - name: CI setup.py
       run: |
         ./script/cibuild-setup-py
