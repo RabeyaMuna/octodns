@@ -3,7 +3,7 @@ on: push
 
 jobs:
   config:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     services:
       pypi_wayback:
         image: ghcr.io/waleko/pypi-wayback
@@ -23,7 +23,7 @@ jobs:
         } >> $GITHUB_OUTPUT
   ci:
     needs: config
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     services:
       pypi_wayback:
         image: ghcr.io/waleko/pypi-wayback
@@ -63,7 +63,7 @@ jobs:
           htmlcov
   setup-py:
     needs: config
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     services:
       pypi_wayback:
         image: ghcr.io/waleko/pypi-wayback
@@ -82,6 +82,9 @@ jobs:
       run: |
         ./script/cibuild-setup-py
 
+# Mirror date must be >= the release date of the newest package pinned in
+# any requirements file. Update this when requirements are updated.
+# Pygments==2.17.2 was released 2023-11-17, so date must be >= 2023-11-17
 env:
-  PIP_INDEX_URL: http://localhost:8629/2023-11-10
-  UV_INDEX_URL: http://localhost:8629/2023-11-10
+  PIP_INDEX_URL: http://localhost:8629/2023-12-01
+  UV_INDEX_URL: http://localhost:8629/2023-12-01
