@@ -47,6 +47,18 @@ def idna_decode(name):
                 return f'*.{_decode(name[2:])}'
             return _decode(name)
         except _IDNAError as e:
+            # If the domain is too long, try to decode individual labels
+            if 'too long' in str(e).lower():
+                decoded_pieces = []
+                for piece in pieces:
+                    if piece.startswith('xn--'):
+                        try:
+                            decoded_pieces.append(_decode(piece))
+                        except _IDNAError:
+                            decoded_pieces.append(piece)
+                    else:
+                        decoded_pieces.append(piece)
+                return '.'.join(decoded_pieces)
             raise IdnaError(e)
     # not idna, just return as-is
     return name

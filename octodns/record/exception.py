@@ -2,7 +2,7 @@
 #
 #
 
-from ..idna import idna_decode
+from ..idna import IdnaError, idna_decode
 
 
 class RecordException(Exception):
@@ -13,7 +13,11 @@ class ValidationError(RecordException):
     @classmethod
     def build_message(cls, fqdn, reasons, context=None):
         reasons = '\n  - '.join(reasons)
-        msg = f'Invalid record "{idna_decode(fqdn)}"'
+        try:
+            decoded = idna_decode(fqdn)
+        except IdnaError:
+            decoded = fqdn
+        msg = f'Invalid record "{decoded}"'
         if context:
             msg += f', {context}'
         msg += f'\n  - {reasons}'
