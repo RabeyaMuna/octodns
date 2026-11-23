@@ -38,6 +38,8 @@ def idna_encode(name):
 
 
 def idna_decode(name):
+    if len(name) > 253:
+        raise IdnaError('Domain too long')
     pieces = name.lower().split('.')
     if any(p.startswith('xn--') for p in pieces):
         try:
