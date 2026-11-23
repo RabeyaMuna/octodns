@@ -35,14 +35,16 @@ jobs:
           - octodns/octodns-digitalocean
           - octodns/octodns-dnsimple
           - octodns/octodns-dnsmadeeasy
-          - octodns/octodns-dyn
           - octodns/octodns-easydns
+          - octodns/octodns-edgecenter
           - octodns/octodns-edgedns
           - octodns/octodns-etchosts
+          - octodns/octodns-fastly
           - octodns/octodns-gandi
           - octodns/octodns-gcore
           - octodns/octodns-googlecloud
           - octodns/octodns-hetzner
+          - octodns/octodns-linode
           - octodns/octodns-mythicbeasts
           - octodns/octodns-ns1
           - octodns/octodns-ovh
@@ -50,12 +52,10 @@ jobs:
           - octodns/octodns-rackspace
           - octodns/octodns-route53
           - octodns/octodns-selectel
+          - octodns/octodns-spf
           - octodns/octodns-transip
           - octodns/octodns-ultra
-          # has been failing for a while now and afaict not related to octoDNS
-          # changes commenting out on 2023-07-30, will check on it again in at
-          # some point in the future and either re-enable or delete it.
-          #- sukiyaki/octodns-netbox
+          - octodns/octodns-vultr
     steps:
       - uses: actions/checkout@v4
       - name: Setup python

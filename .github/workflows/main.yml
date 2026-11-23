@@ -1,5 +1,7 @@
 name: OctoDNS
-on: [pull_request]
+on:
+  pull_request:
+  workflow_dispatch:
 
 jobs:
   config:
@@ -43,14 +45,14 @@ jobs:
       - name: Store Code Coverage Data
         # if the previous step(s) failed try anyways
         if: always()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: code-coverage-${{ matrix.python-version }}
           path: |
             .coverage
             coverage.xml
             htmlcov
-  setup-py:
+  package:
     needs: config
     runs-on: ubuntu-latest
     steps:
@@ -61,6 +63,23 @@ jobs:
           # Most recent release from https://devguide.python.org/versions/#versions
           python-version: ${{ fromJson(needs.config.outputs.json).python_version_current }}
           architecture: x64
-      - name: CI setup.py
+      - name: CI package build
         run: |
-          ./script/cibuild-setup-py
+          ./script/cibuild-package
+  docs:
+    needs: config
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup python
+        uses: actions/setup-python@v4
+        with:
+          # Most recent release from https://devguide.python.org/versions/#versions
+          python-version: ${{ fromJson(needs.config.outputs.json).python_version_current }}
+          architecture: x64
+      - name: Bootstrap
+        run: |
+          ./script/bootstrap
+      - name: Generate docs
+        run: |
+          ./script/generate-docs
