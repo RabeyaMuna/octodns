@@ -47,6 +47,8 @@ def idna_decode(name):
                 return f'*.{_decode(name[2:])}'
             return _decode(name)
         except _IDNAError as e:
+            if 'Domain too long' in str(e):
+                return name
             raise IdnaError(e)
     # not idna, just return as-is
     return name

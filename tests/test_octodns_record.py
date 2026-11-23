@@ -616,7 +616,7 @@ class TestRecordValidation(TestCase):
         self.assertTrue(reason.startswith('invalid fqdn, "déjà-vu'))
         self.assertTrue(
             reason.endswith(
-                '.unit.tests." is too long at 259' ' chars, max is 253'
+                '.unit.tests." is too long at 251 chars, max is 253'
             )
         )
 
